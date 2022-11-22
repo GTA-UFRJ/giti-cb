@@ -26,11 +26,19 @@ def environment_variables ():
     except:
         raise Exception("Failed to set environment variables")
     
-def issue_request (data_keys, dst_org):
-    command = "peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C mychannel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" --peerAddresses localhost:9051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt\" -c \'{\"function\":\"IssueRequest\",\"Args\":[\"5\",\""+data_keys+"\",\"1\",\"123\",\"aaaa\",\""+dst_org+"\",\"Org2\"]}\'"
+def issue_request (data_keys, dst_org, uid):
+    command = "peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C mychannel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" --peerAddresses localhost:9051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt\" -c \'{\"function\":\"IssueRequest\",\"Args\":[\""+ data_keys + "\",\"" + uid + "\",\"usig\",\"upubkey\",\""+dst_org+"\",\"Org2\"]}\'"
     print("Issuing command: " + command)
     command_result = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE).stdout
     print(str(command_result.read().decode()))
+
+def issue_response (req_id, result, error_reason, entry_point):
+    command = "peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C global-channel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" --peerAddresses localhost:9051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt\" -c \'{\"function\":\"IssueRequest\",\"Args\":[\""+ req_id + "\",\"" + result + "\",\"" + error_reason + "\",\""+ entry_point + "\"]}\'"
+    print("Issuing command: " + command)
+    command_result = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE).stdout
+    print(str(command_result.read().decode()))
+
+
 
 def main():
     message = server()
