@@ -7,6 +7,7 @@ import json
 
 FILE_PATH = "data.enc"
 
+
 def environment_variables ():
     try:
         pwd = subprocess.Popen("pwd", shell=True, stdout=subprocess.PIPE).stdout
@@ -29,47 +30,55 @@ def environment_variables ():
 
 
 def main():
-	
+    
+    # Set environment variables
+    environment_variables()
+
+    # Receive message from user
     message = server()
-    key = generateKeyPair()
+    generateKeyPair()
     message_dict = json.loads(message)
     permissions = {}
     for key in message_dict:
         permissions[key] = message_dict[key][1]
     data_hash = hashMessage(message)
 
-    store_data (str(permissions), "uid1", "usig1", str(key), str(data_hash), "0.0.0.0:2000")
-
-    enc_message = encryptMessage(message)
-
+    # Log metadata into the local blockchain
+    store_data (str(permissions), "uid1", "usig1", "upubkey1", str(data_hash), "0.0.0.0:2000")
     
+    # Encrypt data and store it in the server
+    enc_message = encryptMessage(message) 
     file_in = open(FILE_PATH,"wb")
     file_in.write(enc_message)
     file_in.close()
 
     #------------------------------------------------------------------------------------------------------
 
+    # Listen for request event
     message = server()
+    req = read_request(message.decode("utf-8")-)
+    print(req)
 
-    result = read_request(message.decode("utf-8"))
-    
-    file_in = open(FILE_PATH,"rb")
-    lines = file_in.read()
-    file_in.close()
+    # Decide if data should be shared
 
-    dec_message = decryptMessage(lines)
-    dec_message_dict = json.loads(dec_message)
-    
-    share = True
 
-    for key in result:
-        if dec_message_dict == "none":
-            share = False
+    # file_in = open(FILE_PATH,"rb")
+    # lines = file_in.read()
+    # file_in.close()
+
+    # dec_message = decryptMessage(lines)
+    # dec_message_dict = json.loads(dec_message)
     
-    if share == True:
-        #emite_positiva
-    else:
-        #emite_negativa            
+    # share = True
+
+    # for key in result:
+    #     if dec_message_dict == "none":
+    #         share = False
+    
+    # if share == True:
+    #     #emite_positiva
+    # else:
+    #     #emite_negativa            
 
     
 

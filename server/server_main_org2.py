@@ -29,12 +29,19 @@ def environment_variables ():
         raise Exception("Failed to set environment variables")
 
 def main():
+    # Set environment variables
+    environment_variables()
+
+    # Listen to client requests
     message = server()
     message_info = message.decode("utf-8").split("|")
-    environment_variables()
-    issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
 
-    client(b"requestID", 5041)
+    # Issue request in the global blockchain
+    req = issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
+    #reqId = json.dumps(req)[reqId]
+
+    # Inform Org1 of the request
+    client(req, 5041)
 
 
 if __name__ == "__main__":
