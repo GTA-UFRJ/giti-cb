@@ -3,6 +3,7 @@ from server_org2 import *
 from server_utils import *
 import subprocess
 import os
+from client_socket import *
 
 
 FILE_PATH = "data.enc"
@@ -31,7 +32,10 @@ def main():
     message = server()
     message_info = message.decode("utf-8").split("|")
     environment_variables()
-    issue_request(message_info[0], message_info[1])
+    issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
+
+    client(b"requestID", 5041)
+
 
 if __name__ == "__main__":
     main()

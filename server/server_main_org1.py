@@ -3,6 +3,7 @@ from server_org1 import *
 from server_utils import *
 import subprocess
 import os
+import json
 
 FILE_PATH = "data.enc"
 
@@ -31,12 +32,44 @@ def main():
 	
     message = server()
     key = generateKeyPair()
+    message_dict = json.loads(message)
+    permissions = {}
+    for key in message_dict:
+        permissions[key] = message_dict[key][1]
+    data_hash = hashMessage(message)
+
+    store_data (str(permissions), "uid1", "usig1", str(key), str(data_hash), "0.0.0.0:2000")
+
     enc_message = encryptMessage(message)
 
     
     file_in = open(FILE_PATH,"wb")
     file_in.write(enc_message)
     file_in.close()
+
+    #------------------------------------------------------------------------------------------------------
+
+    message = server()
+
+    result = read_request(message.decode("utf-8"))
+    
+    file_in = open(FILE_PATH,"rb")
+    lines = file_in.read()
+    file_in.close()
+
+    dec_message = decryptMessage(lines)
+    dec_message_dict = json.loads(dec_message)
+    
+    share = True
+
+    for key in result:
+        if dec_message_dict == "none":
+            share = False
+    
+    if share == True:
+        #emite_positiva
+    else:
+        #emite_negativa            
 
     
 

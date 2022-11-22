@@ -28,6 +28,7 @@ def generateKeyPair():
 	file_out = open(PUBLIC_KEY_PATH, "wb")
 	file_out.write(public_key)
 	file_out.close()
+	return public_key
 
 def signMessage(message):
 	"""
@@ -79,7 +80,7 @@ def decryptMessage(message):
 	private_key = RSA.import_key(open(PRIVATE_KEY_PATH).read())
 	cipher_rsa = PKCS1_OAEP.new(private_key)
 	dec_message = cipher_rsa.decrypt(message)
-	return 
+	return dec_message
 
 def hashMessage (message):
 	"""
