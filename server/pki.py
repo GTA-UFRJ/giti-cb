@@ -80,3 +80,11 @@ def decryptMessage(message):
 	cipher_rsa = PKCS1_OAEP.new(private_key)
 	dec_message = cipher_rsa.decrypt(message)
 	return 
+
+def hashMessage (message):
+	"""
+	hashMessage receives a message as an argument and returns the SHA256 hash of the message
+	"""
+	hash = SHA256.new()
+	hash.update(message)
+	return hash.hexdigest()
