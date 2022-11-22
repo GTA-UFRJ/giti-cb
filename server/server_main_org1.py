@@ -56,7 +56,7 @@ def main():
 
     # Listen for request event
     message = server()
-    req = read_request(message.decode("utf-8")-)
+    req = read_request(message.decode("utf-8"))
     print(req)
 
     # Decide if data should be shared
