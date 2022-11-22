@@ -7,7 +7,7 @@ also define the buffersize and set it to 32KB to limit data size
 """
 
 HOST='0.0.0.0' 
-PORT=5041
+PORT=5042
 
 BUFFSIZE=32768
 
