@@ -54,31 +54,30 @@ def main():
 
     # Listen for request event
     message = server()
-    print(message)
-    req = read_request(message.decode("utf-8"))
-    print(req)
+    reqId = json.loads(message)['TxId']
+
+    # Verify the request in the global blockchain
+    req = json.loads(read_request(reqId))
+
+    # Query permissions in the local blockchain
+    permissions = json.loads(json.loads(get_all_data_files())[0]['Permissions'])
 
     # Decide if data should be shared
+    data_keys = req['DataKeys'][1:-1].replace(' ',"").split(',')
 
+    share = True
+    for data_key in data_keys:
+        print(data_key)
+        if permissions[data_key] == 'none':
+            share = False
 
-    # file_in = open(FILE_PATH,"rb")
-    # lines = file_in.read()
-    # file_in.close()
-
-    # dec_message = decryptMessage(lines)
-    # dec_message_dict = json.loads(dec_message)
-    
-    # share = True
-
-    # for key in result:
-    #     if dec_message_dict == "none":
-    #         share = False
-    
-    # if share == True:
-    #     #emite_positiva
-    # else:
-    #     #emite_negativa            
-
+    # Issue response in the global blockchain 
+    if share == True:
+        print("Sharing of data authorized. Issuing response transaction in the global blockchain...")
+        issue_response(req['TxId'],"approved","","0.0.0.0:9000")
+    else:
+        print("Sharing of data NOT authorized. Issuing response transaction in the global blockchain...")
+        issue_response(req['TxId'],"refused","User did not allow data to be shared.","0.0.0.0:9000")
     
 
 if __name__ == "__main__":

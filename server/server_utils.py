@@ -13,7 +13,7 @@ def issue_request (data_keys, dst_org, uid, usig, upubkey, org_id):
     return str(command_result.read().decode())
 
 def issue_response (req_id, result, error_reason, entry_point):
-    command = "peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C global-channel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" --peerAddresses localhost:9051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt\" -c \'{\"function\":\"IssueRequest\",\"Args\":[\""+ req_id + "\",\"" + result + "\",\"" + error_reason + "\",\""+ entry_point + "\"]}\'"
+    command = "peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C global-channel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" --peerAddresses localhost:9051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt\" -c \'{\"function\":\"IssueResponse\",\"Args\":[\""+ req_id + "\",\"" + result + "\",\"" + error_reason + "\",\""+ entry_point + "\"]}\'"
     print("Issuing command: " + command)
     command_result = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,cwd=BASE_PATH).stdout
     print(str(command_result.read().decode()))
@@ -22,7 +22,14 @@ def read_request (req_id):
     command = "peer chaincode query -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C global-channel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" -c \'{\"function\":\"ReadRequest\",\"Args\":[\"" + req_id + "\"]}\'"
     print("Issuing command: " + command)
     command_result = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,cwd=BASE_PATH).stdout
-    print(str(command_result.read().decode()))
+    #print(str(command_result.read().decode()))
+    return str(command_result.read().decode())
+
+def get_all_requests():
+    command = "peer chaincode query -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C global-channel -n global-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" -c \'{\"function\":\"GetAllRequests\",\"Args\":[\"\"]}\'"
+    print("Issuing command: " + command)
+    command_result = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,cwd=BASE_PATH).stdout
+    #print(str(command_result.read().decode()))
     return str(command_result.read().decode())
 
 
@@ -54,5 +61,7 @@ def update_data_address (data_id, address):
     print(str(command_result.read().decode()))
 
 def get_all_data_files ():
-    command = "peer chaincode query -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C local-channel -n local-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" --peerAddresses localhost:9051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt\" -c \'{\"function\":\"GetAllDataFiles\",\"Args\":[\"\"]}\'"
+    command = "peer chaincode query -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile \"${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem\" -C local-channel -n local-bc --peerAddresses localhost:7051 --tlsRootCertFiles \"${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt\" -c \'{\"function\":\"GetAllDataFiles\",\"Args\":[\"\"]}\'"
     print("Issuing command: " + command)
+    command_result = subprocess.Popen(command,shell=True,stdout=subprocess.PIPE,cwd=BASE_PATH).stdout
+    return str(command_result.read().decode())

@@ -3,6 +3,7 @@ from server_org2 import *
 from server_utils import *
 import subprocess
 import os
+import json
 from client_socket import *
 
 
@@ -39,13 +40,12 @@ def main():
     # Issue request in the global blockchain
     issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
     
-    # TODO: add code to retrieve request
-
-    # reqId = json.dumps(req)[reqId]
+    # Fetch request in the blockchain
+    req = json.loads(get_all_requests())[0]
+    json_req = json.dumps(req)
 
     # Inform Org1 of the request
-    client(req.encode(), 5041)
-
+    client(json_req.encode(), 5041)
 
 if __name__ == "__main__":
     main()
