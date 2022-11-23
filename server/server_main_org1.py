@@ -6,25 +6,23 @@ import os
 import json
 
 FILE_PATH = "data.enc"
-
+BASE_PATH = "/root/go/src/github.com/gta/fabric-samples/rnp-giti-cb"
 
 def environment_variables ():
     try:
-        pwd = subprocess.Popen("pwd", shell=True, stdout=subprocess.PIPE).stdout
-        pwd_string = str(pwd.read().decode())
-        pwd_string = pwd_string.rstrip()
-        new_path_string = pwd_string + "/../bin"
-        fabric_cfg_path = pwd_string + "/../config/"
-        rootcert_file_path = pwd_string + "/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
-        mspconfigpath = pwd_string + "/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp"
+        bin_path = BASE_PATH + "/../bin/"
+        fabric_cfg_path = BASE_PATH + "/../config/"
+        rootcert_file_path = BASE_PATH + "/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"
+        mspconfigpath = BASE_PATH + "/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp"
 
-        os.environ["PATH"] += os.pathsep + new_path_string
+        os.environ["PATH"] += os.pathsep + bin_path
         os.environ["FABRIC_CFG_PATH"] = fabric_cfg_path
         os.environ["CORE_PEER_TLS_ENABLED"] = "true"
         os.environ["CORE_PEER_LOCALMSPID"] = "\"Org1MSP\""
         os.environ["CORE_PEER_TLS_ROOTCERT_FILE"] = rootcert_file_path
         os.environ["CORE_PEER_MSPCONFIGPATH"] = mspconfigpath
         os.environ["CORE_PEER_ADDRESS"] = "localhost:7051"
+
     except:
         raise Exception("Failed to set environment variables")
 
@@ -32,7 +30,7 @@ def environment_variables ():
 def main():
     
     # Set environment variables
-    environment_variables()
+    # environment_variables()
 
     # Receive message from user
     message = server()
@@ -42,9 +40,9 @@ def main():
     for key in message_dict:
         permissions[key] = message_dict[key][1]
     data_hash = hashMessage(message)
-
+    
     # Log metadata into the local blockchain
-    store_data (str(permissions), "uid1", "usig1", "upubkey1", str(data_hash), "0.0.0.0:2000")
+    store_data(json.dumps(permissions).replace('"', '\\"'), "uid1", "usig1", "upubkey1", "Org1", str(data_hash), "0.0.0.0:2000")
     
     # Encrypt data and store it in the server
     enc_message = encryptMessage(message) 
@@ -56,6 +54,7 @@ def main():
 
     # Listen for request event
     message = server()
+    print(message)
     req = read_request(message.decode("utf-8"))
     print(req)
 

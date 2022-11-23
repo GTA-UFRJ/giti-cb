@@ -30,18 +30,21 @@ def environment_variables ():
 
 def main():
     # Set environment variables
-    environment_variables()
+    # environment_variables()
 
     # Listen to client requests
     message = server()
     message_info = message.decode("utf-8").split("|")
 
     # Issue request in the global blockchain
-    req = issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
-    #reqId = json.dumps(req)[reqId]
+    issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
+    
+    # TODO: add code to retrieve request
+
+    # reqId = json.dumps(req)[reqId]
 
     # Inform Org1 of the request
-    client(req, 5041)
+    client(req.encode(), 5041)
 
 
 if __name__ == "__main__":
