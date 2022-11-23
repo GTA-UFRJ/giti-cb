@@ -37,10 +37,10 @@ def main():
     message = server()
     message_info = message.decode("utf-8").split("|")
 
-    # Issue request in the global blockchain
+    # Log request in the global blockchain
     issue_request (str(message_info[0]), str(message_info[1]), str(message_info[2]), "usig1", "upubkey1", "Org2")
     
-    # Fetch request in the blockchain
+    # Fetch the logged request from the blockchain
     req = json.loads(get_all_requests())[0]
     json_req = json.dumps(req)
 

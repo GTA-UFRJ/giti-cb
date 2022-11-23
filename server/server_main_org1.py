@@ -34,14 +34,20 @@ def main():
 
     # Receive message from user
     message = server()
+
+    # Generate keys
     generateKeyPair()
+
+    # Fetch permissions
     message_dict = json.loads(message)
     permissions = {}
     for key in message_dict:
         permissions[key] = message_dict[key][1]
+
+    # Create data hash
     data_hash = hashMessage(message)
     
-    # Log metadata into the local blockchain
+    # Log data into the local blockchain
     store_data(json.dumps(permissions).replace('"', '\\"'), "uid1", "usig1", "upubkey1", "Org1", str(data_hash), "0.0.0.0:2000")
     
     # Encrypt data and store it in the server
@@ -52,7 +58,7 @@ def main():
 
     #------------------------------------------------------------------------------------------------------
 
-    # Listen for request event
+    # Listen for request events
     message = server()
     reqId = json.loads(message)['TxId']
 
@@ -64,7 +70,6 @@ def main():
 
     # Decide if data should be shared
     data_keys = req['DataKeys'][1:-1].replace(' ',"").split(',')
-
     share = True
     for data_key in data_keys:
         print(data_key)

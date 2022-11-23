@@ -34,10 +34,10 @@ def send_data(dataInJSON, PORT=5041):
     client(bytes(dataInJSON, encoding="utf-8"), PORT)
 
 @cli.command(name='issueRequest', help='Sends message to domain, informing stored data in another domain')
-@click.option('-d', '--data', default='name,cpf,email', help='Data stored in domain that user wants to grant access')
+@click.option('-d', '--data_keys', default='name,cpf,email', help='Data keys stored in the local blockchain that user wants to grant access')
 @click.option('-o', '--dst_org', default='Org1', help='Domain that stores client data')
 @click.option('-uid', '--user_id', default='uid1', help='User identity number')
-def issue_request(data, dst_org, user_id):
+def issue_request(data_keys, dst_org, user_id):
     """
     issueRequest sends a message to a server authorizing the
     request of the clients data that is stored in another domain.
@@ -45,7 +45,7 @@ def issue_request(data, dst_org, user_id):
     domain, e.g., 'name,email', and the domain that stores it through
     the dst_org argument.
     """
-    info = data.split(',')
+    info = data_keys.split(',')
     string_send = str(info) + "|" + dst_org + "|" + user_id
     send_data(string_send, 5042)
 
